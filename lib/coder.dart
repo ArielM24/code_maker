@@ -506,4 +506,36 @@ class Coder {
     code = code.replaceAll("[", "[(int)");
     return code;
   }
+
+  String getFuncJava() {
+    String code = "";
+    List lines = raw.split("\n");
+    lines.removeWhere((line) => line.isEmpty);
+    print(lines.length);
+    for (String line in lines) {
+      code += parseJavaLine(line);
+    }
+    code = code.replaceAll("nums", "double[]");
+    code = code.replaceAll("num", "double");
+    code = code.replaceAll("none", "void");
+    code = code.replaceAll("[", "[(int)");
+    code = code.replaceAll("[(int)]", "[]");
+    return code;
+  }
+
+  String getFuncPython() {
+    String code = "";
+    List lines = raw.split("\n");
+    lines.removeWhere((line) => line.isEmpty);
+    print(lines.length);
+    for (String line in lines) {
+      code += parsePythonLine(line);
+    }
+    //code = code.replaceAll("nums", "[]");
+    code = code.replaceAll("num", "");
+    code = code.replaceAll("none", "");
+    //code = code.replaceAll("[", "[(int)");
+    //code = code.replaceAll("[(int)]", "[]");
+    return code;
+  }
 }

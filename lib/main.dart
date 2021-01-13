@@ -281,13 +281,13 @@ class _MainWindow extends State<_MainWindow_> {
         break;
       case 2:
         if (functionalCode)
-          return coder.getFuncC();
+          return coder.getFuncJava();
         else
           return coder.getCodeJava();
         break;
       case 3:
         if (functionalCode)
-          return coder.getFuncC();
+          return coder.getFuncPython();
         else
           return coder.getCodePython();
         break;
