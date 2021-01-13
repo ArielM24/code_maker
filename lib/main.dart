@@ -27,6 +27,7 @@ class _MainWindow extends State<_MainWindow_> {
   String _filePath = "";
   File file;
   var selectedLangs = <bool>[];
+  var functionalCode = false;
   var checkboxes;
   bool generated = false;
   var _textControllers = [];
@@ -89,14 +90,31 @@ class _MainWindow extends State<_MainWindow_> {
                     ),
                   ),
                 ),
-                Row(
+                Column(
                   children: [
-                    RaisedButton(onPressed: _selectFile, child: Text("Open")),
-                    SizedBox(
-                      width: 20,
+                    Row(
+                      children: [
+                        RaisedButton(
+                            onPressed: _selectFile, child: Text("Open")),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        RaisedButton(
+                            onPressed: _createPreview, child: Text("Preview")),
+                      ],
                     ),
-                    RaisedButton(
-                        onPressed: _createPreview, child: Text("Preview")),
+                    SizedBox(
+                      width: 200,
+                      child: CheckboxListTile(
+                        title: Text("Function"),
+                        value: functionalCode,
+                        onChanged: (val) {
+                          setState(() {
+                            functionalCode = val;
+                          });
+                        },
+                      ),
+                    ),
                   ],
                 ),
                 checkboxes[0],
@@ -247,34 +265,57 @@ class _MainWindow extends State<_MainWindow_> {
     return readPath;
   }
 
+  getCodeIndex(index, coder) {
+    switch (index) {
+      case 0:
+        if (functionalCode)
+          return coder.getFuncC();
+        else
+          return coder.getCodeC();
+        break;
+      case 1:
+        if (functionalCode)
+          return coder.getFuncCpp();
+        else
+          return coder.getCodeCpp();
+        break;
+      case 2:
+        if (functionalCode)
+          return coder.getFuncC();
+        else
+          return coder.getCodeJava();
+        break;
+      case 3:
+        if (functionalCode)
+          return coder.getFuncC();
+        else
+          return coder.getCodePython();
+        break;
+      case 4:
+        if (functionalCode)
+          return coder.getFuncC();
+        else
+          return coder.getCodeGo();
+        break;
+      case 5:
+        if (functionalCode)
+          return coder.getFuncC();
+        else
+          return coder.getCodeDart();
+        break;
+    }
+  }
+
   _createPreview() async {
     var data = await readJson(file);
     var coder = Coder.fromRaw(data);
-    if (selectedLangs[0]) {
-      var cCode = coder.getCodeC();
-      _textControllers[0].text = cCode;
-    }
-
-    if (selectedLangs[1]) {
-      var cppCode = coder.getCodeCpp();
-      _textControllers[1].text = cppCode;
-    }
-
-    if (selectedLangs[2]) {
-      var javaCode = coder.getCodeJava();
-      _textControllers[2].text = javaCode;
-    }
-    if (selectedLangs[3]) {
-      var pythonCode = coder.getCodePython();
-      _textControllers[3].text = pythonCode;
-    }
-    if (selectedLangs[4]) {
-      var goCode = coder.getCodeGo();
-      _textControllers[4].text = goCode;
-    }
-    if (selectedLangs[5]) {
-      var dartCode = coder.getCodeDart();
-      _textControllers[5].text = dartCode;
+    for (int i = 0; i < selectedLangs.length; i++) {
+      {
+        if (selectedLangs[i]) {
+          String code = getCodeIndex(i, coder);
+          _textControllers[i].text = code;
+        }
+      }
     }
   }
 

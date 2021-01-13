@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
+import 'package:code_maker/parser.dart';
 
 Future<List<_Shape>> readJson(File f) async {
   List<Map> shapes = List<Map>();
@@ -474,5 +475,35 @@ class Coder {
         break;
     }
     return '\t${l[1]} = $format(stdin.readLineSync());\n';
+  }
+
+  String getFuncC() {
+    String code = "";
+    List lines = raw.split("\n");
+    lines.removeWhere((line) => line.isEmpty);
+    print(lines.length);
+    for (String line in lines) {
+      code += parseCLine(line);
+    }
+    code = code.replaceAll("nums", "double*");
+    code = code.replaceAll("num", "double");
+    code = code.replaceAll("none", "void");
+    code = code.replaceAll("[", "[(int)");
+    return code;
+  }
+
+  String getFuncCpp() {
+    String code = "";
+    List lines = raw.split("\n");
+    lines.removeWhere((line) => line.isEmpty);
+    print(lines.length);
+    for (String line in lines) {
+      code += parseCppLine(line);
+    }
+    code = code.replaceAll("nums", "double*");
+    code = code.replaceAll("num", "double");
+    code = code.replaceAll("none", "void");
+    code = code.replaceAll("[", "[(int)");
+    return code;
   }
 }
