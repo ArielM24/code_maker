@@ -293,13 +293,13 @@ class _MainWindow extends State<_MainWindow_> {
         break;
       case 4:
         if (functionalCode)
-          return coder.getFuncC();
+          return coder.getFuncGo();
         else
           return coder.getCodeGo();
         break;
       case 5:
         if (functionalCode)
-          return coder.getFuncC();
+          return coder.getFuncDart();
         else
           return coder.getCodeDart();
         break;

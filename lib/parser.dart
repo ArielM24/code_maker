@@ -60,10 +60,6 @@ String arrayC(String line) {
   return "\tdouble ${data[2]}[${data[1]}];\n";
 }
 
-String parseIndex(String line) {
-  return line.replaceAll("[", "[(int)");
-}
-
 String parseCppLine(String line) {
   if (line.startsWith("get")) {
     return scanCpp(line);
@@ -210,4 +206,105 @@ String namePython(String line) {
 String arrayPython(String line) {
   var data = line.split(" ");
   return "\t${data[2]} = [0] * ${data[1]}\n";
+}
+
+String parseGoLine(String line) {
+  if (line.startsWith("get")) {
+    return scanGo(line);
+  } else if (line.startsWith("print")) {
+    return printGo(line);
+  } else if (line.startsWith("while")) {
+    return whileGo(line);
+  } else if (line.startsWith("end")) {
+    return endC(line);
+  } else if (line.startsWith("if")) {
+    return ifC(line);
+  } else if (line.endsWith(")")) {
+    return nameGo(line);
+  } else if (line.contains(RegExp(r"nums\ ([a-zA-Z]+|[0-9]+)\ [a-zA-Z]+.*"))) {
+    return arrayGo(line);
+  } else
+    return "\t${line.replaceAll('num', 'var')};\n";
+}
+
+String scanGo(String line) {
+  var data = line.split(" ");
+  if (data[1] == "num") {
+    return '\tfmt.Scanf("%f", &${data[2]});';
+  } else if (data[1] == "nums") {
+    return '\tfor i_i := 0; i_i < ${data[2]}; i_i++ {\n\t\tfmt.Scanf("%f", &${data[3]}[i_i]);\n\t}\n';
+  }
+  return "";
+}
+
+String printGo(String line) {
+  var data = line.split(" ");
+  return "\tfmt.Println(${data[2]})\n";
+}
+
+String whileGo(String line) {
+  return "\t${line.replaceAll('while', 'for')} {\n\t";
+}
+
+String reverseArgs(String args) {
+  String res = "";
+  args = args.replaceAll('(', ' ').replaceAll(')', '').replaceAll(",", ' ');
+  var data = args.split(" ");
+  print(data);
+  if ((data.length & 1) != 1) {
+    for (int i = 2; i < data.length; i += 2) {
+      res += data[i + 1] + " " + data[i];
+    }
+  }
+  print(res);
+  return res;
+}
+
+String nameGo(String line) {
+  var data = line.split(" ");
+  return "func ${data[1].split('(')[0]}(${reverseArgs(line)}) ${data[0]} {\n";
+}
+
+String arrayGo(String line) {
+  var data = line.split(" ");
+  return "\t${data[2]} := make([]float64, ${data[1]});\n";
+}
+
+String parseDartLine(String line) {
+  if (line.startsWith("get")) {
+    return scanDart(line);
+  } else if (line.startsWith("print")) {
+    return printDart(line);
+  } else if (line.startsWith("while")) {
+    return whileC(line);
+  } else if (line.startsWith("end")) {
+    return endC(line);
+  } else if (line.startsWith("if")) {
+    return ifC(line);
+  } else if (line.endsWith(")")) {
+    return nameC(line);
+  } else if (line.contains(RegExp(r"nums\ ([a-zA-Z]+|[0-9]+)\ [a-zA-Z]+.*"))) {
+    return arrayDart(line);
+  } else
+    return "\t$line;\n";
+}
+
+String scanDart(String line) {
+  var data = line.split(" ");
+  if (data[1] == "num") {
+    return '\t${data[2]} = stdin.readLineSync();';
+  } else if (data[1] == "nums") {
+    return '\tfor(int i_i = 0; i_i < ${data[2]}; i_i++) {\n\t\t${data[3]} = stdin.readLineSync();\n\t}\n';
+  }
+  return "";
+}
+
+String printDart(String line) {
+  var data = line.split(" ");
+  return "\tprint(${data[2]});\n";
+}
+
+String arrayDart(String line) {
+  var data = line.split(" ");
+  return "\tvar ${data[2]} = List<num>.generate(${data[1]}, (i_i)=>0);\n";
 }

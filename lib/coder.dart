@@ -531,11 +531,40 @@ class Coder {
     for (String line in lines) {
       code += parsePythonLine(line);
     }
-    //code = code.replaceAll("nums", "[]");
     code = code.replaceAll("num", "");
     code = code.replaceAll("none", "");
-    //code = code.replaceAll("[", "[(int)");
-    //code = code.replaceAll("[(int)]", "[]");
+    return code;
+  }
+
+  String getFuncGo() {
+    String code = "";
+    List lines = raw.split("\n");
+    lines.removeWhere((line) => line.isEmpty);
+    print(lines.length);
+    for (String line in lines) {
+      code += parseGoLine(line);
+    }
+    code = code.replaceAll("nums", "[]float64");
+    code = code.replaceAll("num", "float64");
+    code = code.replaceAll("none", "");
+    code = code.replaceAll("[", "[(int)");
+    code = code.replaceAll("[(int)]", "[]");
+    return code;
+  }
+
+  String getFuncDart() {
+    String code = "";
+    List lines = raw.split("\n");
+    lines.removeWhere((line) => line.isEmpty);
+    print(lines.length);
+    for (String line in lines) {
+      code += parseDartLine(line);
+    }
+    code = code.replaceAll("nums", "<num>[]");
+    code = code.replaceAll("num", "num");
+    code = code.replaceAll("none", "void");
+    code = code.replaceAll("[", "[(int)");
+    code = code.replaceAll("[(int)]", "[]");
     return code;
   }
 }
